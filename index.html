@@ -4,31 +4,23 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>OpenCV Laboratoriya 1</title>
-
 <script async src="https://docs.opencv.org/4.x/opencv.js"></script>
-
 <style>
 body{
-    font-family: Arial, sans-serif;
-    background:#f4f4f4;
-    text-align:center;
-    padding:20px;
+font-family:Arial,sans-serif;
+background:#f4f4f4;
+text-align:center;
+padding:20px;
 }
-
-h1{
-    color:#333;
-}
-
 canvas{
-    border:1px solid #ccc;
-    margin:10px;
-    max-width:90%;
+border:1px solid #ccc;
+margin:10px;
+max-width:90%;
 }
-
 button{
-    padding:10px 20px;
-    margin:5px;
-    cursor:pointer;
+padding:10px 20px;
+margin:5px;
+cursor:pointer;
 }
 </style>
 </head>
@@ -54,75 +46,82 @@ let src;
 
 document.getElementById('fileInput').addEventListener('change', function(e){
 
-    const file = e.target.files[0];
+const file = e.target.files[0];
+const img = new Image();
 
-    const img = new Image();
+img.onload = function(){
 
-    img.onload = function(){
+const canvas = document.getElementById('canvasOutput');
 
-        const canvas = document.getElementById('canvasOutput');
-        canvas.width = img.width;
-        canvas.height = img.height;
+canvas.width = img.width;
+canvas.height = img.height;
 
-        const ctx = canvas.getContext('2d');
-        ctx.drawImage(img,0,0);
+const ctx = canvas.getContext('2d');
 
-        src = cv.imread(canvas);
-    }
+ctx.drawImage(img,0,0);
 
-    img.src = URL.createObjectURL(file);
+src = cv.imread(canvas);
+
+};
+
+img.src = URL.createObjectURL(file);
+
 });
 
 function toGray(){
 
-    let gray = new cv.Mat();
+let gray = new cv.Mat();
 
-    cv.cvtColor(src, gray, cv.COLOR_RGBA2GRAY);
+cv.cvtColor(src, gray, cv.COLOR_RGBA2GRAY);
 
-    cv.imshow('canvasOutput', gray);
+cv.imshow('canvasOutput', gray);
 
-    gray.delete();
+gray.delete();
+
 }
 
 function detectEdges(){
 
-    let gray = new cv.Mat();
-    let edges = new cv.Mat();
+let gray = new cv.Mat();
+let edges = new cv.Mat();
 
-    cv.cvtColor(src, gray, cv.COLOR_RGBA2GRAY);
-    cv.Canny(gray, edges, 100, 200);
+cv.cvtColor(src, gray, cv.COLOR_RGBA2GRAY);
 
-    cv.imshow('canvasOutput', edges);
+cv.Canny(gray, edges, 100, 200);
 
-    gray.delete();
-    edges.delete();
+cv.imshow('canvasOutput', edges);
+
+gray.delete();
+edges.delete();
+
 }
 
 function drawRectangle(){
 
-    let img = src.clone();
+let img = src.clone();
 
-    cv.rectangle(
-        img,
-        new cv.Point(50,50),
-        new cv.Point(300,200),
-        [0,255,0,255],
-        3
-    );
+cv.rectangle(
+img,
+new cv.Point(50,50),
+new cv.Point(300,200),
+[0,255,0,255],
+3
+);
 
-    cv.putText(
-        img,
-        "OpenCV Lab1",
-        new cv.Point(60,40),
-        cv.FONT_HERSHEY_SIMPLEX,
-        1,
-        [255,255,255,255],
-        2
-    );
+cv.putText(
+img,
+"OpenCV Lab1",
+new cv.Point(60,40),
+cv.FONT_HERSHEY_SIMPLEX,
+1,
+[255,255,255,255],
+2
+);
 
-    cv.imshow('canvasOutput', img);
+cv.imshow('canvasOutput', img);
 
-    img.delete();
+img.delete();
+
 }
 
 </script>
